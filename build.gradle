@@ -1,7 +1,16 @@
+buildscript {
+    ext {
+        restdocsApiSpecVersion = '0.18.4'
+    }
+}
+
 plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.1.8'
 	id 'io.spring.dependency-management' version '1.1.4'
+	id 'com.epages.restdocs-api-spec' version "${restdocsApiSpecVersion}" // openAPI 플러그인
+		// 4. swaggerUI 플러그인 추가
+    id 'org.hidetake.swagger.generator' version '2.18.2'
 }
 
 group = 'com.whatpl'
@@ -49,6 +58,11 @@ dependencies {
 
 	// P6Spy 추가
 	implementation "com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.9.0"
+	
+	testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc' // restdocs mockmvc
+	testImplementation 'com.epages:restdocs-api-spec-mockmvc:'+restdocsApiSpecVersion // restdocs
+	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2")
+
 }
 
 tasks.named('bootBuildImage') {
@@ -57,4 +71,33 @@ tasks.named('bootBuildImage') {
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+// 10. openapi3가 먼저 실행 - doFrist를 통한 Header 설정 (글에서 자세하게 설명)
+tasks.withType(GenerateSwaggerUI) {
+    dependsOn 'openapi3'
+    delete file('src/main/resources/static/docs/')
+    copy {
+    	from "build/resources/mains/static/docs"
+    	into "src/main/resources/static/docs"
+    }
+}
+
+// 11. 생성된 openapi3 스펙을 기반으로 SwaggerUISample 생성 및 static/docs 패키지에 복사
+bootJar {
+    dependsOn(':openapi3')
+}
+
+// openAPI 문서 형식
+openapi3 {
+	servers = [
+			{ url = 'http://localhost:8080' },
+			{ url = 'http://whaple.com' }
+	]
+	title = 'Whatpl Service API'
+	description = 'Whatpl Service API description'
+	version = '1.0.0'
+	format = 'json'
+	outputDirectory = "build/resources/main/static/docs"
+    outputFileNamePrefix = "swagger"
 }

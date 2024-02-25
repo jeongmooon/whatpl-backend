@@ -6,6 +6,8 @@ import com.whatpl.jwt.JwtProperties;
 import com.whatpl.jwt.JwtService;
 import com.whatpl.security.config.SecurityConfig;
 import com.whatpl.security.domain.AccountPrincipal;
+import com.whatpl.swagger.test.service.SwaggerTestService;
+
 import jakarta.servlet.ServletException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -45,6 +47,9 @@ class JwtAuthenticationFilterTest {
 
     @MockBean
     JwtProperties jwtProperties;
+    
+    @MockBean
+    SwaggerTestService swaggerTestService;
 
     @Test
     @DisplayName("Authorization 헤더의 토큰이 유효할 경우 사용자 인증")

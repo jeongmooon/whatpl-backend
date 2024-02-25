@@ -5,6 +5,8 @@ import com.whatpl.exception.ErrorCode;
 import com.whatpl.jwt.JwtProperties;
 import com.whatpl.jwt.JwtService;
 import com.whatpl.security.config.SecurityConfig;
+import com.whatpl.swagger.test.service.SwaggerTestService;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +36,9 @@ public class SecurityHandlerTest {
     @MockBean
     JwtProperties jwtProperties;
 
+    @MockBean
+    SwaggerTestService swaggerTestService;
+    
     @Test
     @DisplayName("인증되지 않은 사용자가 인증이 필요한 uri 로 요청하면 에러 응답")
     void test() throws Exception {

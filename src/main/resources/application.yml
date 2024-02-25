@@ -67,3 +67,4 @@ jwt:
   token-type: Bearer
   access-expiration-time: 1_800_000 # 30min
   refresh-expiration-time: 1_209_600_000 # 2weeks
+
