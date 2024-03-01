@@ -11,7 +11,7 @@ import lombok.Data;
 public class ResponseData<T> {
 
 	private String status;
-	private String messgae;
+	private String message;
 	private T data;
 	private String accessToken;
 	
@@ -22,7 +22,7 @@ public class ResponseData<T> {
 		for (HttpCode httpCode : HttpCode.values()) {
             if(httpCode.getCode().equals(code)) {
             	this.status = httpCode.getStatus();
-            	this.messgae = httpCode.getMessage();
+            	this.message = httpCode.getMessage();
             }
 		}
 	}

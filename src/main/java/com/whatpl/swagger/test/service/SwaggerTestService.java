@@ -11,7 +11,7 @@ import lombok.RequiredArgsConstructor;
 @Service
 public class SwaggerTestService {
 	public ResponseData<MemberDTO> getTest(final String id) {
-		MemberDTO mem = new MemberDTO();
+		MemberDTO mem = new MemberDTO("1","g@gmail.com","test123456");
 		mem.setIdx("1");
 		mem.setEmail("g@gmail.com");
 		mem.setPassword("test123456");

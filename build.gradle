@@ -1,3 +1,6 @@
+import org.hidetake.gradle.swagger.generator.GenerateSwaggerUI
+import org.springframework.boot.gradle.tasks.bundling.BootJar
+
 buildscript {
     ext {
         restdocsApiSpecVersion = '0.18.4'
@@ -28,6 +31,12 @@ configurations {
 
 repositories {
 	mavenCentral()
+}
+
+swaggerSources {
+  sample {
+      setInputFile(file("${project.buildDir}/api-spec/openapi3.json"))
+  }
 }
 
 dependencies {
@@ -100,4 +109,17 @@ openapi3 {
 	format = 'json'
 	outputDirectory = "build/resources/main/static/docs"
     outputFileNamePrefix = "swagger"
+}
+
+tasks.register('copySwaggerUI', Copy) {
+    dependsOn 'generateSwaggerUISample'
+
+    def generateSwaggerUISampleTask = tasks.named('generateSwaggerUISample', GenerateSwaggerUI).get()
+
+    from("${generateSwaggerUISampleTask.outputDir}")
+    into("${project.buildDir}/resources/main/static/docs")
+}
+
+tasks.withType(BootJar) {
+    dependsOn 'copySwaggerUI'
 }

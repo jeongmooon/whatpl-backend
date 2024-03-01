@@ -20,8 +20,8 @@ public class SwaggerTestController {
 	private final SwaggerTestService saSwaggerTestService;
 	
 	@PostMapping
-	public ResponseEntity<ResponseData<MemberDTO>> test(@RequestBody String id) {
+	public ResponseData<MemberDTO> test(@RequestBody String id) {
 		ResponseData resData = new ResponseData("G000");
-		return ResponseEntity.ok(saSwaggerTestService.getTest(id));
+		return saSwaggerTestService.getTest(id);
 	}
 }
