@@ -12,6 +12,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
@@ -44,10 +45,7 @@ import com.whatpl.swagger.test.dto.MemberDTO;
 import com.whatpl.swagger.test.service.SwaggerTestService;
 
 
-@SpringBootTest(properties = {"SPRING_DATASOURCE_URL=jdbc:mysql://43.201.188.14:3306/whatpl_dev",
-	"SPRING_DATASOURCE_USERNAME=whatpl_user",
-	"SPRING_DATASOURCE_PASSWORD=whatpl_password"})
-@AutoConfigureMockMvc
+@WebMvcTest
 @AutoConfigureRestDocs //
 @Import(SecurityConfig.class)
 @ExtendWith(RestDocumentationExtension.class) //
