@@ -112,9 +112,9 @@ public class SwaggerTest {
                     		fieldWithPath("status").description("상태").type(JsonFieldType.STRING),
                     		fieldWithPath("message").description("메세지").type(JsonFieldType.STRING),
                     		fieldWithPath("accessToken").description("토큰").type(JsonFieldType.STRING),
-                    		fieldWithPath("data.idx").description("아이디").type(MemberDTO.class),
-                    		fieldWithPath("data.email").description("이메일").type(MemberDTO.class),
-                    		fieldWithPath("data.password").description("비밀번호").type(MemberDTO.class)
+                    		fieldWithPath("data.idx").description("아이디").type(JsonFieldType.STRING),
+                    		fieldWithPath("data.email").description("이메일").type(JsonFieldType.STRING),
+                    		fieldWithPath("data.password").description("비밀번호").type(JsonFieldType.STRING)
                     )
                     /*
                     ResourceDocumentation.resource(

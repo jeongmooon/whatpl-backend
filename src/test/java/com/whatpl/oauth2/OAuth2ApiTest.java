@@ -2,6 +2,7 @@ package com.whatpl.oauth2;
 
 import com.whatpl.account.AccountService;
 import com.whatpl.security.config.SecurityConfig;
+import com.whatpl.swagger.test.service.SwaggerTestService;
 import com.whatpl.jwt.JwtProperties;
 import com.whatpl.jwt.JwtService;
 import com.whatpl.util.CookieUtils;
@@ -40,6 +41,9 @@ public class OAuth2ApiTest {
 
     @MockBean
     JwtProperties jwtProperties;
+    
+    @MockBean
+    SwaggerTestService swaggerTestService;
 
     @Test
     @DisplayName("인가코드 요청 API 호출시 리다이렉트 되고, AuthorizationRequest 검증용 Cookie 가 발급된다.")

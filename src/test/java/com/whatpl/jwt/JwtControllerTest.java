@@ -2,6 +2,8 @@ package com.whatpl.jwt;
 
 import com.whatpl.account.AccountService;
 import com.whatpl.security.config.SecurityConfig;
+import com.whatpl.swagger.test.service.SwaggerTestService;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +35,9 @@ class JwtControllerTest {
 
     @MockBean
     JwtProperties jwtProperties;
+    
+    @MockBean
+    SwaggerTestService swaggerTestService;
 
     @Test
     @DisplayName("토큰 재발급 요청")

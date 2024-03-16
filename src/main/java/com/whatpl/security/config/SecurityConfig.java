@@ -30,7 +30,6 @@ import org.springframework.security.web.context.*;
 public class SecurityConfig {
 
     private static final String[] WEB_SECURITY_WHITE_LIST = {"/", "/login*", "oauth2*", "/error*", "/token", "/swagger*"};
-
     /*
      * 일반적인 정적자원들의 보안설정 해제
      */
@@ -45,6 +44,7 @@ public class SecurityConfig {
                                                    JwtProperties jwtProperties) throws Exception {
         http.authorizeHttpRequests(auth -> auth
                         .requestMatchers(WEB_SECURITY_WHITE_LIST).permitAll()
+                        .requestMatchers("/docs/*").permitAll()
                         .anyRequest().authenticated())
                 .oauth2Login(oauth2 -> oauth2
                         .userInfoEndpoint(userInfo -> userInfo

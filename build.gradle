@@ -35,7 +35,7 @@ repositories {
 
 swaggerSources {
   sample {
-      setInputFile(file("${project.buildDir}/api-spec/openapi3.json"))
+      setInputFile(file("${project.buildDir}/api-spec/openapi3.yml"))
   }
 }
 
@@ -71,6 +71,8 @@ dependencies {
 	testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc' // restdocs mockmvc
 	testImplementation 'com.epages:restdocs-api-spec-mockmvc:'+restdocsApiSpecVersion // restdocs
 	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2")
+	
+	swaggerUI 'org.webjars:swagger-ui:4.11.1'
 
 }
 
@@ -82,21 +84,6 @@ tasks.named('test') {
 	useJUnitPlatform()
 }
 
-// 10. openapi3가 먼저 실행 - doFrist를 통한 Header 설정 (글에서 자세하게 설명)
-tasks.withType(GenerateSwaggerUI) {
-    dependsOn 'openapi3'
-    delete file('src/main/resources/static/docs/')
-    copy {
-    	from "build/resources/mains/static/docs"
-    	into "src/main/resources/static/docs"
-    }
-}
-
-// 11. 생성된 openapi3 스펙을 기반으로 SwaggerUISample 생성 및 static/docs 패키지에 복사
-bootJar {
-    dependsOn(':openapi3')
-}
-
 // openAPI 문서 형식
 openapi3 {
 	servers = [
@@ -106,20 +93,33 @@ openapi3 {
 	title = 'Whatpl Service API'
 	description = 'Whatpl Service API description'
 	version = '1.0.0'
-	format = 'json'
-	outputDirectory = "build/resources/main/static/docs"
-    outputFileNamePrefix = "swagger"
+	format = 'yml'
+	//outputDirectory = "build/resources/main/static/docs"
+    //outputFileNamePrefix = "swagger"
 }
 
-tasks.register('copySwaggerUI', Copy) {
-    dependsOn 'generateSwaggerUISample'
+// 10. openapi3가 먼저 실행 - doFrist를 통한 Header 설정 (글에서 자세하게 설명)
+tasks.withType(GenerateSwaggerUI) {
+    dependsOn 'openapi3'
+    doFirst {
+        def swaggerUIFile = file("${openapi3.outputDirectory}/openapi3.yml")
 
-    def generateSwaggerUISampleTask = tasks.named('generateSwaggerUISample', GenerateSwaggerUI).get()
+        def securitySchemesContent =  "  securitySchemes:\n" +  \
+                                      "    APIKey:\n" +  \
+                                      "      type: apiKey\n" +  \
+                                      "      name: Authorization\n" +  \
+                                      "      in: header\n" + \
+                                      "security:\n" +
+                                      "  - APIKey: []  # Apply the security scheme here"
 
-    from("${generateSwaggerUISampleTask.outputDir}")
-    into("${project.buildDir}/resources/main/static/docs")
+        swaggerUIFile.append securitySchemesContent
+    }
 }
 
-tasks.withType(BootJar) {
-    dependsOn 'copySwaggerUI'
+// 11. 생성된 openapi3 스펙을 기반으로 SwaggerUISample 생성 및 static/docs 패키지에 복사
+bootJar {
+    dependsOn generateSwaggerUISample
+    from("${generateSwaggerUISample.outputDir}") {
+        into 'static/docs'
+    }
 }
