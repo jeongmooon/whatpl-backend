@@ -1,7 +1,16 @@
 package com.whatpl.swagger.test;
 
+import static com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.document;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
+import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
+import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
@@ -11,9 +20,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpHeaders;
@@ -25,21 +32,12 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import static com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.document;
-import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
-import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
-import static org.springframework.restdocs.payload.PayloadDocumentation.*;
-import static org.springframework.restdocs.request.RequestDocumentation.*;
-import com.epages.restdocs.apispec.ResourceDocumentation;
-import com.epages.restdocs.apispec.ResourceSnippetParameters;
-import com.epages.restdocs.apispec.Schema;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.whatpl.account.AccountService;
-import com.whatpl.jwt.JwtProperties;
-import com.whatpl.jwt.JwtService;
-import com.whatpl.security.config.SecurityConfig;
-import com.whatpl.security.domain.AccountPrincipal;
+import com.whatpl.global.config.SecurityConfig;
+import com.whatpl.global.jwt.JwtProperties;
+import com.whatpl.global.jwt.JwtService;
+import com.whatpl.global.security.domain.MemberPrincipal;
+import com.whatpl.member.service.MemberLoginService;
 import com.whatpl.swagger.test.data.ResponseData;
 import com.whatpl.swagger.test.dto.MemberDTO;
 import com.whatpl.swagger.test.service.SwaggerTestService;
@@ -61,20 +59,21 @@ public class SwaggerTest {
     SwaggerTestService swaggerTestService;
     
     @MockBean
-    AccountService accountService;
+    MemberLoginService memberLoginService;
 
     @MockBean
     JwtService jwtService;
 
     @MockBean
     JwtProperties jwtProperties;
+    
     @Test
     @DisplayName("swagger 테스트")
 	void getTest() throws Exception {
         // given: 토큰이 유효한 경우로 세팅
         String tokenType = "Bearer";
         String validToken = "validToken";
-        var principal = new AccountPrincipal(1L, "test", "", Collections.emptySet(), null);
+        var principal = new MemberPrincipal(1L, "test", "", Collections.emptySet(), null);
         var authenticationToken = new UsernamePasswordAuthenticationToken(principal, "", Collections.emptySet());
         when(jwtProperties.getTokenType())
                 .thenReturn(tokenType);

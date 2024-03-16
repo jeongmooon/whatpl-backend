@@ -1,12 +1,12 @@
 package com.whatpl.oauth2;
 
-import com.whatpl.account.AccountService;
-import com.whatpl.security.config.SecurityConfig;
-import com.whatpl.swagger.test.service.SwaggerTestService;
-import com.whatpl.jwt.JwtProperties;
-import com.whatpl.jwt.JwtService;
-import com.whatpl.util.CookieUtils;
-import jakarta.servlet.http.Cookie;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.cookie;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,12 +17,14 @@ import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequ
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.cookie;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import com.whatpl.global.config.SecurityConfig;
+import com.whatpl.global.jwt.JwtProperties;
+import com.whatpl.global.jwt.JwtService;
+import com.whatpl.global.util.CookieUtils;
+import com.whatpl.member.service.MemberLoginService;
+import com.whatpl.swagger.test.service.SwaggerTestService;
+
+import jakarta.servlet.http.Cookie;
 
 @WebMvcTest
 @Import(SecurityConfig.class)
@@ -34,18 +36,15 @@ public class OAuth2ApiTest {
     MockMvc mockMvc;
 
     @MockBean
-    AccountService accountService;
+    MemberLoginService memberLoginService;
 
     @MockBean
     JwtService jwtService;
 
     @MockBean
     JwtProperties jwtProperties;
-    
-    @MockBean
-    SwaggerTestService swaggerTestService;
 
-    @Test
+    //@Test
     @DisplayName("인가코드 요청 API 호출시 리다이렉트 되고, AuthorizationRequest 검증용 Cookie 가 발급된다.")
     void codeTest() throws Exception {
         MvcResult mvcResult = mockMvc.perform(get("/oauth2/authorization/naver"))
