@@ -34,6 +34,10 @@ public enum ErrorCode {
     NOT_MATCH_PROJECT_APPLY("PRJ8", 400, "프로젝트 ID와 지원서 ID가 일치하지 않습니다."),
     ALREADY_PROCESSED_APPLY("PRJ9", 400, "이미 승인 또는 거절된 지원서입니다."),
     CANT_PROCESS_WAITING("PRJ10", 400, "프로젝트 지원서를 대기 상태로 변경할 수 없습니다."),
+    
+    // PRODUCT
+    NOT_FOUND_PRODUCT("PRD1", 404, "프로덕트를 찾을 수 없습니다."),
+    NOT_AUTHOR_OF_PRODUCT("PRD2", 403, "해당 프로덕트를 작성한 사용자가 아닙니다."),
 
     // APPLY
     NOT_FOUND_APPLY("APL1", 404, "지원서를 찾을 수 없습니다."),
