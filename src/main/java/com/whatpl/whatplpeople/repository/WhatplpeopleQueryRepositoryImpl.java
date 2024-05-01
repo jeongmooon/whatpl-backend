@@ -7,23 +7,17 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.whatpl.global.common.domain.enums.Job;
 import com.whatpl.global.common.domain.enums.Subject;
 import com.whatpl.member.domain.Member;
-import com.whatpl.project.domain.Project;
 import com.whatpl.project.domain.QProject;
 import com.whatpl.project.domain.enums.ProjectStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
 
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
-import static com.whatpl.attachment.domain.QAttachment.attachment;
 import static com.whatpl.member.domain.QMember.member;
-import static com.whatpl.project.domain.QProjectSkill.projectSkill;
 import static com.whatpl.project.domain.QRecruitJob.recruitJob;
 
 @RequiredArgsConstructor
@@ -32,7 +26,7 @@ public class WhatplpeopleQueryRepositoryImpl implements WhatplpeopleQueryReposit
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public Page<Member> findProjectWriterByJob(Job job, Set<Subject> subject, Pageable pageable) {
+    public Page<Member> findProjectWriterByJob(Job job, Set<Subject> subject, Pageable pageable, Set<Long> retrievedUserId) {
         BooleanBuilder builder = new BooleanBuilder();
         builder.and(recruitJob.job.eq(job));
         builder.and(recruitJob.totalAmount.gt(recruitJob.currentAmount));
@@ -43,6 +37,10 @@ public class WhatplpeopleQueryRepositoryImpl implements WhatplpeopleQueryReposit
         if(!subject.isEmpty()) {
             subjectExpression = QProject.project.subject.in(subject);
             builder.and(subjectExpression);
+        }
+
+        if(!retrievedUserId.isEmpty()){
+            builder.and(QProject.project.writer.id.notIn(retrievedUserId));
         }
 
         List<Member> content = queryFactory.select(QProject.project.writer)
