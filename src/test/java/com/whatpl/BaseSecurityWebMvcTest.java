@@ -10,6 +10,7 @@ import com.whatpl.member.service.MemberProfileService;
 import com.whatpl.project.service.ProjectApplyService;
 import com.whatpl.project.service.ProjectReadService;
 import com.whatpl.project.service.ProjectWriteService;
+import com.whatpl.whatplpeople.service.WhatplpeopleService;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -58,6 +59,9 @@ public abstract class BaseSecurityWebMvcTest {
 
     @MockBean
     protected ProjectReadService projectReadService;
+
+    @MockBean
+    protected WhatplpeopleService whatplpeopleService;
 
     @BeforeEach
     protected void init() {

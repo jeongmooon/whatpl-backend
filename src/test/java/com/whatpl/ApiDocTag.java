@@ -10,6 +10,7 @@ public enum ApiDocTag {
     MEMBER("Members"),
     PROJECT("Projects"),
     ATTACHMENT("Attachments"),
+    WHATPLPEOPLE("Whatpl-People"),
     DOMAIN("Domains");
 
     private final String tag;
